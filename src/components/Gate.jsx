@@ -10,6 +10,8 @@ import { Leaf, Rasengan, reduceMotion } from "./Fx.jsx";
 const MIN_SHOW = 1800; // biar gerbang sempat terlihat walau aset sudah di cache
 const OPEN_MS = 1800; // cahaya masuk + kamera menerobos
 const FADE_MS = 450;
+const FONT_WAIT = 2500; // font Google boleh telat; jangan tahan gerbang karenanya
+const MAX_WAIT = 8000; // koneksi lambat: tetap masuk, sisa gambar menyusul
 
 // Lorong gelap pada gambar gerbang 735×588: trapesium, atas x 262–478 (y 224),
 // bawah x 246–492 (y 545). Disimpan sebagai kotak pembatas + clip-path.
@@ -35,6 +37,7 @@ const LEAVES = Array.from({ length: 9 }, (_, i) => ({
 export default function Gate() {
   const [phase, setPhase] = useState("loading"); // loading → open → fade → done
   const [loaded, setLoaded] = useState(0);
+  const [gateReady, setGateReady] = useState(false);
   const total = PRELOAD.length + 1; // +1 untuk font
 
   useEffect(() => {
@@ -53,14 +56,18 @@ export default function Gate() {
           im.src = src;
         })
     );
-    const fonts = (document.fonts ? document.fonts.ready : Promise.resolve()).then(tick);
+    const fonts = Promise.race([
+      document.fonts ? document.fonts.ready : Promise.resolve(),
+      new Promise((r) => setTimeout(r, FONT_WAIT)),
+    ]).then(tick);
+    const allLoaded = Promise.race([Promise.all([...jobs, fonts]), new Promise((r) => setTimeout(r, MAX_WAIT))]);
 
     document.body.classList.add("intro-on");
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     const timers = [];
-    Promise.all([...jobs, fonts]).then(() => {
+    allLoaded.then(() => {
       const wait = Math.max(0, MIN_SHOW - (performance.now() - t0));
       timers.push(
         setTimeout(() => {
@@ -115,11 +122,17 @@ export default function Gate() {
 
       <div className="gate-scene">
         <div className="gate-drift absolute inset-0">
-          <img src={IMG.gerbang} alt="" className="absolute inset-0 w-full h-full mix-blend-multiply" />
+          <img
+            src={IMG.gerbang}
+            alt=""
+            onLoad={() => setGateReady(true)}
+            ref={(el) => el && el.complete && el.naturalWidth > 0 && !gateReady && setGateReady(true)}
+            className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${gateReady ? "opacity-100" : "opacity-0"}`}
+          />
 
           {/* lorong gerbang: chakra saat memuat, desa Konoha saat dibuka */}
           <div
-            className="absolute overflow-hidden"
+            className={`absolute overflow-hidden transition-opacity duration-500 ${gateReady ? "opacity-100" : "opacity-0"}`}
             style={{
               left: pct(HOLE.x),
               top: pct(HOLE.y),
