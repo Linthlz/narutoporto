@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background-color: #fbfaf7;
+    color: #0a0a0a;
+    font-family: "Zen Kaku Gothic New", system-ui, sans-serif;
+    line-height: 1.75;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: #0a0a0a;
+    color: #fbfaf7;
+  }
+
+  :focus-visible {
+    outline: 3px solid #c8102e;
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* ---- gutter aman untuk bilah sistem di sisi layar ---- */
+  .wrap {
+    width: 100%;
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-left: max(18px, env(safe-area-inset-left, 0px));
+    padding-right: max(18px, env(safe-area-inset-right, 0px));
+  }
+
+  /* ---- screentone: titik raster ala cetak manga ---- */
+  .tone {
+    background-image: radial-gradient(#0a0a0a 1.1px, transparent 1.2px);
+    background-size: 6px 6px;
+    opacity: 0.22;
+  }
+  .tone-lg {
+    background-image: radial-gradient(#0a0a0a 1.6px, transparent 1.7px);
+    background-size: 9px 9px;
+    opacity: 0.16;
+  }
+
+  /* ---- arsir silang untuk bayangan ---- */
+  .hatch {
+    background-image: repeating-linear-gradient(
+      45deg,
+      #0a0a0a 0 1px,
+      transparent 1px 6px
+    );
+    opacity: 0.3;
+  }
+  .hatch-x {
+    background-image:
+      repeating-linear-gradient(45deg, #0a0a0a 0 1px, transparent 1px 7px),
+      repeating-linear-gradient(-45deg, #0a0a0a 0 1px, transparent 1px 7px);
+    opacity: 0.26;
+  }
+
+  /* ---- garis kecepatan horizontal ---- */
+  .speed {
+    background-image: repeating-linear-gradient(
+      100deg,
+      #0a0a0a 0 1.5px,
+      transparent 1.5px 9px
+    );
+  }
+
+  /* ---- garis kecepatan radial untuk transisi ---- */
+  .speed-radial {
+    background-image: repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      transparent 0 1.1deg,
+      #0a0a0a 1.1deg 1.6deg,
+      transparent 1.6deg 4.2deg
+    );
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 15%, #000 50%);
+    mask-image: radial-gradient(circle at 50% 50%, transparent 15%, #000 50%);
+  }
+  .speed-radial-inv {
+    background-image: repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      transparent 0 1.1deg,
+      #fbfaf7 1.1deg 1.6deg,
+      transparent 1.6deg 4.2deg
+    );
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 15%, #000 50%);
+    mask-image: radial-gradient(circle at 50% 50%, transparent 15%, #000 50%);
+  }
+
+  /* ---- bingkai panel manga ---- */
+  .panel {
+    border: 3px solid #0a0a0a;
+    background: #fbfaf7;
+  }
+
+  /* ---- teks vertikal Jepang ---- */
+  .tategaki {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+  }
+
+  /* ---- gumpalan tinta pada transisi ---- */
+  .inkblob {
+    border-radius: 48% 52% 60% 40% / 55% 45% 58% 42%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

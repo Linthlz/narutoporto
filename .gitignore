@@ -1,0 +1,10 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.env
+.vite
+
+# gambar mentah; salinan yang dipakai ada di public/assets
+asset/

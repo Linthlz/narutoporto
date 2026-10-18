@@ -1,0 +1,855 @@
+/* =========================================================
+   Efek gerak bertema jurus: daun Konoha, asap, rasengan,
+   sharingan, gagak, bunshin, dan pemunculan saat digulir.
+   ========================================================= */
+
+/* ---------- putaran SVG berpusat ---------- */
+.spin-c {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: fx-spin var(--t, 1s) linear infinite;
+}
+.spin-c.rev {
+  animation-direction: reverse;
+}
+@keyframes fx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- pemunculan saat digulir ---------- */
+[data-reveal] {
+  transition:
+    opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+    clip-path 0.9s cubic-bezier(0.75, 0, 0.2, 1);
+  transition-delay: var(--d, 0ms);
+}
+[data-reveal="rise"] {
+  opacity: 0;
+  transform: translateY(46px);
+}
+[data-reveal="left"] {
+  opacity: 0;
+  transform: translateX(-70px) skewX(8deg);
+}
+[data-reveal="right"] {
+  opacity: 0;
+  transform: translateX(70px) skewX(-8deg);
+}
+[data-reveal="zoom"] {
+  opacity: 0;
+  transform: scale(0.82) rotate(-3deg);
+}
+[data-reveal="slash"] {
+  clip-path: polygon(0 0, 0 0, -20% 100%, -20% 100%);
+}
+[data-reveal].is-in {
+  opacity: 1;
+  transform: none;
+  clip-path: polygon(0 0, 120% 0, 100% 100%, -20% 100%);
+}
+
+/* goresan kuas di belakang kanji kepala seksi */
+.brush-bar {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.7s 0.25s cubic-bezier(0.75, 0, 0.2, 1);
+  clip-path: polygon(2% 18%, 100% 0, 97% 82%, 0 100%);
+}
+.is-in .brush-bar {
+  transform: scaleX(1);
+}
+
+/* ---------- daun berguguran ---------- */
+.leaf-fall {
+  position: absolute;
+  top: -8vh;
+  animation: leaf-fall var(--t, 14s) linear infinite;
+  animation-delay: var(--d, 0s);
+}
+.leaf-sway {
+  animation: leaf-sway var(--s, 3s) ease-in-out infinite alternate;
+}
+@keyframes leaf-fall {
+  to {
+    transform: translateY(118vh);
+  }
+}
+@keyframes leaf-sway {
+  from {
+    transform: translateX(-46px) rotate(-40deg);
+  }
+  to {
+    transform: translateX(46px) rotate(70deg);
+  }
+}
+
+/* ---------- asap ala manga (garis luar disatukan) ---------- */
+.puff {
+  position: absolute;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%) scale(0);
+  animation: puff var(--t, 0.9s) cubic-bezier(0.2, 0.9, 0.3, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes puff {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  55% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.22);
+    opacity: 0;
+  }
+}
+.puff.hold {
+  animation-name: puff-hold;
+}
+@keyframes puff-hold {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+  }
+  60%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* ---------- pita segel berjalan ---------- */
+.marquee {
+  animation: marquee var(--t, 38s) linear infinite;
+}
+.marquee.rev {
+  animation-direction: reverse;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- orbit bola pencari kebenaran ---------- */
+.orbit {
+  animation: fx-spin 26s linear infinite;
+}
+.orbit-bob {
+  animation: orb-bob 2.6s ease-in-out infinite alternate;
+  animation-delay: var(--d, 0s);
+}
+@keyframes orb-bob {
+  from {
+    transform: translateY(-6px) scale(0.92);
+  }
+  to {
+    transform: translateY(6px) scale(1.06);
+  }
+}
+
+/* masuknya huruf judul */
+.letter-in {
+  display: inline-block;
+  animation: letter-in 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.2) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes letter-in {
+  0% {
+    opacity: 0;
+    transform: translateY(0.4em) scale(1.8) rotate(-12deg);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.hero-pop {
+  animation: hero-pop 1s 0.25s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+}
+@keyframes hero-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(-14deg);
+    clip-path: circle(0% at 50% 50%);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-3deg);
+    clip-path: circle(100% at 50% 50%);
+  }
+}
+
+/* ---------- bayangan kloning (kage bunshin) berulang ---------- */
+.clone-l,
+.clone-r {
+  animation: clone-l 7s cubic-bezier(0.6, 0, 0.3, 1) infinite;
+}
+.clone-r {
+  animation-name: clone-r;
+}
+@keyframes clone-l {
+  0%,
+  30% {
+    transform: translateX(0) scale(0.9);
+    opacity: 0;
+  }
+  38%,
+  82% {
+    transform: translateX(-46%) scale(0.92);
+    opacity: 0.5;
+  }
+  90%,
+  100% {
+    transform: translateX(0) scale(0.9);
+    opacity: 0;
+  }
+}
+@keyframes clone-r {
+  0%,
+  30% {
+    transform: translateX(0) scale(0.9);
+    opacity: 0;
+  }
+  38%,
+  82% {
+    transform: translateX(46%) scale(0.92);
+    opacity: 0.5;
+  }
+  90%,
+  100% {
+    transform: translateX(0) scale(0.9);
+    opacity: 0;
+  }
+}
+.clone-puff {
+  animation: clone-puff 7s ease-out infinite;
+}
+@keyframes clone-puff {
+  0%,
+  31% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  42%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.3);
+  }
+}
+.clone-word {
+  animation: clone-word 7s ease-out infinite;
+}
+@keyframes clone-word {
+  0%,
+  32% {
+    opacity: 0;
+    transform: scale(1.6) rotate(-6deg);
+  }
+  37%,
+  78% {
+    opacity: 1;
+    transform: scale(1) rotate(-6deg);
+  }
+  86%,
+  100% {
+    opacity: 0;
+    transform: scale(0.9) rotate(-6deg);
+  }
+}
+
+/* ---------- gagak berhamburan ---------- */
+.crow {
+  position: absolute;
+  left: var(--x, 50%);
+  top: var(--y, 40%);
+  animation: crow-fly var(--t, 5s) cubic-bezier(0.3, 0.1, 0.4, 1) infinite;
+  animation-delay: var(--d, 0s);
+  opacity: 0;
+}
+.crow svg {
+  animation: crow-flap 0.32s ease-in-out infinite alternate;
+  transform-origin: 50% 60%;
+}
+@keyframes crow-fly {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+  12% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx, 200px), var(--ty, -200px)) scale(1.15);
+  }
+}
+@keyframes crow-flap {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0.35);
+  }
+}
+
+/* panel itachi: tsukuyomi saat disentuh */
+.tsuku-red {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.tsuku:hover .tsuku-red,
+.tsuku:focus-within .tsuku-red {
+  opacity: 1;
+}
+.tsuku img {
+  transition:
+    transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 0.5s ease;
+}
+.tsuku:hover img {
+  transform: scale(1.06);
+  filter: contrast(1.25);
+}
+
+/* ---------- transisi jurus layar penuh ---------- */
+.jt-fade-in {
+  animation: jt-fade-in 0.14s ease-out both;
+}
+@keyframes jt-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.jt-exit-fade {
+  animation: jt-exit-fade 0.55s 1.15s ease-in both;
+}
+@keyframes jt-exit-fade {
+  to {
+    opacity: 0;
+    transform: scale(1.12);
+    filter: blur(4px);
+  }
+}
+.jt-exit-iris {
+  animation: jt-exit-iris 0.6s 1.12s cubic-bezier(0.7, 0, 0.3, 1) both;
+}
+@keyframes jt-exit-iris {
+  from {
+    clip-path: circle(150% at 50% 50%);
+  }
+  to {
+    clip-path: circle(0% at 50% 50%);
+  }
+}
+.jt-iris-in {
+  animation: jt-iris-in 0.42s cubic-bezier(0.7, 0, 0.3, 1) both;
+}
+@keyframes jt-iris-in {
+  from {
+    clip-path: circle(0% at 50% 50%);
+  }
+  to {
+    clip-path: circle(150% at 50% 50%);
+  }
+}
+
+.rz-grow {
+  animation: rz-grow 1.2s cubic-bezier(0.2, 0.9, 0.25, 1.2) both;
+}
+@keyframes rz-grow {
+  0% {
+    transform: scale(0) rotate(-90deg);
+  }
+  40% {
+    transform: scale(1) rotate(0);
+  }
+  75% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(7);
+  }
+}
+.rz-white {
+  animation: rz-white 0.4s 0.95s ease-out both;
+}
+@keyframes rz-white {
+  0% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.shake {
+  animation: shake 0.08s linear 8 0.3s;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-6px, 4px);
+  }
+  50% {
+    transform: translate(5px, -5px);
+  }
+  75% {
+    transform: translate(-4px, -3px);
+  }
+}
+
+.sfx-in {
+  animation: sfx-in 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.3) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes sfx-in {
+  0% {
+    opacity: 0;
+    transform: scale(2.4) rotate(var(--r, -8deg));
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1) rotate(var(--r, -8deg));
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.94) rotate(var(--r, -8deg));
+  }
+}
+
+.sfx-stay {
+  animation: sfx-stay 0.6s cubic-bezier(0.2, 0.9, 0.25, 1.3) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes sfx-stay {
+  0% {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sh-grow {
+  animation: sh-grow 1.1s cubic-bezier(0.2, 0.9, 0.25, 1.1) both;
+}
+@keyframes sh-grow {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  45% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.18) rotate(40deg);
+    opacity: 1;
+  }
+}
+.itachi-rise {
+  animation: itachi-rise 1.2s 0.12s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes itachi-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8%) scale(1.08);
+  }
+  to {
+    opacity: 0.55;
+    transform: none;
+  }
+}
+
+.clone-pop {
+  opacity: 0;
+  animation: clone-pop 0.3s ease-out both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes clone-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- intro: kuchiyose ---------- */
+.seal-flash {
+  animation: seal-flash 0.2s ease-out both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes seal-flash {
+  0% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+.formula-line {
+  transform-origin: left center;
+  animation: formula 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes formula {
+  from {
+    transform: rotate(var(--a)) scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(var(--a)) scaleX(1);
+    opacity: 1;
+  }
+}
+.intro-out {
+  animation: intro-out 0.6s ease-in both;
+}
+@keyframes intro-out {
+  to {
+    opacity: 0;
+    transform: scale(1.1);
+    filter: blur(6px);
+  }
+}
+.fade-up {
+  animation: fade-up 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* ---------- percikan tinta saat klik ---------- */
+.ink-burst i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px;
+  height: 3px;
+  background: #0a0a0a;
+  transform-origin: 0 50%;
+  animation: ink-burst 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.ink-burst i:nth-child(odd) {
+  background: #c8102e;
+  width: 12px;
+}
+@keyframes ink-burst {
+  from {
+    transform: rotate(var(--a)) translateX(4px) scaleX(0.2);
+    opacity: 1;
+  }
+  to {
+    transform: rotate(var(--a)) translateX(30px) scaleX(1);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  .brush-bar {
+    transform: none;
+  }
+  .leaf-layer,
+  .crow {
+    display: none;
+  }
+}
+
+/* ---------- shunshin: pusaran daun saat pindah seksi ---------- */
+.shunshin-veil {
+  animation: shunshin-veil 0.8s ease-in-out both;
+}
+@keyframes shunshin-veil {
+  0% {
+    opacity: 0;
+  }
+  35%,
+  55% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.swirl-leaf {
+  left: 0;
+  top: 0;
+  animation: swirl-leaf 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes swirl-leaf {
+  0% {
+    transform: rotate(var(--a)) translateX(0) rotate(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(calc(var(--a) + 220deg)) translateX(62vmax) rotate(540deg);
+    opacity: 0;
+  }
+}
+
+/* ---------- hero ---------- */
+.par {
+  transform: translate3d(calc(var(--mx, 0) * var(--k) * 1px), calc(var(--my, 0) * var(--k) * 1px), 0);
+  transition: transform 0.25s ease-out;
+}
+.rasen-btn svg {
+  transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.25, 1.3);
+}
+.rasen-btn:hover svg,
+.rasen-btn:focus-visible svg {
+  transform: scale(1.5);
+}
+
+/* animasi masuk halaman ditahan selama intro berjalan */
+.intro-on main .fade-up,
+.intro-on main .letter-in,
+.intro-on main .hero-pop {
+  animation-play-state: paused;
+}
+
+/* ---------- layar muat: gerbang desa ---------- */
+.gate-scene {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* sisakan ruang untuk judul di atas dan bilah muat di bawah */
+  width: min(94vw, max(300px, calc((100vh - 250px) * 1.25)));
+  aspect-ratio: 735 / 588;
+  transform: translate(-50%, -50%);
+  transform-origin: 50.2% 65.5%;
+  /* putih gambar lebur ke kertas & garis kecepatan di belakangnya */
+  mix-blend-mode: multiply;
+}
+.gate-drift {
+  transform-origin: 50.2% 65.5%;
+  animation: gate-drift 7s ease-in-out infinite alternate;
+}
+@keyframes gate-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.035);
+  }
+}
+.gate-chakra {
+  background: #0a0a0a;
+  transition:
+    transform 0.6s cubic-bezier(0.5, 0, 0.75, 0),
+    opacity 0.5s ease;
+}
+.is-open .gate-chakra {
+  transform: scale(2.4);
+  opacity: 0;
+}
+.gate-village {
+  clip-path: circle(0% at 50% 62%);
+  transition: clip-path 0.75s 0.1s cubic-bezier(0.6, 0, 0.3, 1);
+}
+.gate-village img {
+  transform: scale(1.4);
+  transition: transform 1.6s cubic-bezier(0.3, 0, 0.2, 1);
+}
+.is-open .gate-village {
+  clip-path: circle(120% at 50% 62%);
+}
+.is-open .gate-village img {
+  transform: scale(1);
+}
+.gate-light {
+  background: radial-gradient(ellipse at 50% 62%, rgba(255, 253, 240, 0.95), rgba(255, 250, 230, 0.1) 70%);
+  opacity: 0.9;
+  transition: opacity 1.2s 0.3s ease;
+}
+.is-open .gate-light {
+  opacity: 0.25;
+}
+.is-open .gate-scene {
+  animation: gate-push 1.25s 0.5s cubic-bezier(0.55, 0, 0.4, 1) both;
+}
+@keyframes gate-push {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(7);
+  }
+}
+.gate-flash {
+  opacity: 0;
+}
+.is-open .gate-flash {
+  animation: gate-flash 0.45s 1.35s ease-in both;
+}
+@keyframes gate-flash {
+  to {
+    opacity: 1;
+  }
+}
+.gate-ui {
+  transition:
+    opacity 0.4s ease,
+    transform 0.6s ease;
+}
+.is-open .gate-ui {
+  opacity: 0;
+  transform: scale(1.08);
+}
+.gate-fade {
+  animation: gate-fade 0.45s ease-out both;
+}
+@keyframes gate-fade {
+  to {
+    opacity: 0;
+  }
+}
+
+/* ---------- maskot kembali ke atas ---------- */
+.mascot {
+  transform: translateY(140%);
+  transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.25, 1.3);
+}
+.mascot.is-shown {
+  transform: translateY(0);
+}
+.mascot-img {
+  /* latar foto #f7f7f7 → putih, supaya lebur dengan kertas */
+  filter: brightness(1.04) contrast(1.12);
+  transform-origin: 50% 100%;
+  animation: mascot-idle 2.4s ease-in-out infinite;
+}
+@keyframes mascot-idle {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.95) scaleX(1.02);
+  }
+}
+.mascot.is-leap .mascot-panel {
+  animation: mascot-leap 0.6s cubic-bezier(0.3, 0, 0.3, 1) both;
+}
+@keyframes mascot-leap {
+  0% {
+    transform: scaleY(0.82) scaleX(1.08);
+  }
+  40% {
+    transform: translateY(-160px) scaleY(1.1) rotate(-8deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-320px) scale(0.6);
+    opacity: 0;
+  }
+}
+.mascot-bubble {
+  opacity: 0;
+  transform: translateX(8px) scale(0.9);
+  transition:
+    opacity 0.2s ease,
+    transform 0.3s cubic-bezier(0.2, 0.9, 0.25, 1.3);
+}
+.mascot:hover .mascot-bubble,
+.mascot:focus-visible .mascot-bubble {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- latar seksi yang bergeser saat digulir ---------- */
+[data-par] {
+  will-change: transform;
+}
+.fade-x {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 35%);
+  mask-image: linear-gradient(90deg, transparent, #000 35%);
+}
+.fade-x-r {
+  -webkit-mask-image: linear-gradient(270deg, transparent, #000 35%);
+  mask-image: linear-gradient(270deg, transparent, #000 35%);
+}
+.fade-y {
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%, #000 75%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 30%, #000 75%, transparent);
+}
+.fade-top {
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 45%);
+  mask-image: linear-gradient(180deg, transparent, #000 45%);
+}
+
+/* panel itachi: potret muncul saat genjutsu */
+.tsuku .tsuku-alt {
+  opacity: 0;
+  transform: scale(1.12);
+  transition:
+    opacity 0.6s ease,
+    transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.tsuku:hover .tsuku-alt,
+.tsuku:focus-within .tsuku-alt {
+  opacity: 1;
+  transform: none;
+}
+
+/* panel hokage: jubah berkibar pelan */
+.cape-sway {
+  transform-origin: 50% 0;
+  animation: cape-sway 6s ease-in-out infinite alternate;
+}
+@keyframes cape-sway {
+  from {
+    transform: scale(1.04) rotate(-0.6deg);
+  }
+  to {
+    transform: scale(1.08) rotate(0.6deg) translateY(-1.5%);
+  }
+}
